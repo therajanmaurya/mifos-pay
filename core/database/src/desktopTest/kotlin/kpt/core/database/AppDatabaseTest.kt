@@ -37,23 +37,23 @@ class AppDatabaseTest {
     }
 
     @Test
-    fun databaseExposeAlertDao() {
+    fun databaseExposeTransactionDao() {
         database = Room.inMemoryDatabaseBuilder<AppDatabase>()
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(Dispatchers.IO)
             .build()
 
-        assertNotNull(database!!.alertDao)
+        assertNotNull(database!!.transactionDao)
     }
 
     @Test
-    fun databaseExposeInterestRateSeriesDao() {
+    fun databaseExposeTransferDetailDao() {
         database = Room.inMemoryDatabaseBuilder<AppDatabase>()
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(Dispatchers.IO)
             .build()
 
-        assertNotNull(database!!.interestRateSeriesDao)
+        assertNotNull(database!!.transferDetailDao)
     }
 
     @Test
