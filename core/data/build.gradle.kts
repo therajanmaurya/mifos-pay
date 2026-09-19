@@ -43,9 +43,6 @@ kotlin {
             // get them for free instead of every feature module repeating its own
             // implementation(projects.core.{model,datastore,network}) — features must never depend
             // on core/network directly; core/data is the sole consumer/re-exporter of it.
-            api(projects.core.datastore)
-            api(projects.core.model)
-            api(projects.core.network)
             implementation(projects.core.firebase)
 
             implementation(projects.coreBase.common)
@@ -56,15 +53,6 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             api(libs.cmp.network.monitor)
 
-            // Fork addition: applying the compose-compiler plugin (above) requires the Compose
-            // Runtime on the classpath — see core/common's build.gradle.kts for the same fix + rationale.
-            implementation(compose.runtime)
-            implementation(compose.components.resources)
-
-            // Fork addition: BiometricsSetupAdapterImpl / MifosPasscodeAdapterImpl wrap the
-            // mifos-authenticator biometrics/passcode storage adapters.
-            implementation(libs.mifos.authenticator.biometrics)
-            implementation(libs.mifos.authenticator.passcode)
         }
 
         androidMain.dependencies {
@@ -81,3 +69,16 @@ kotlin {
         }
     }
 }
+
+// ── Fork-owned dependency seam (white-label, mirrors `feature-deps.gradle.kts`) ────────────────
+// A fork adds its OWN dependencies for this module in `core/data/module-deps.gradle.kts` — never in
+// this file. That is what lets THIS build file be `owner: template` and FULL-COPY on a template
+// sync: the fork's deps live in a file the sync never touches, so a template plugin/version bump
+// can no longer drop them and no 3-way merge is needed.
+//
+// String `"commonMainImplementation"(...)` notation is used in the seam, not the type-safe
+// `libs.`/`projects.` accessors: those are NOT generated for `apply(from = ...)` script plugins.
+//
+// Guarded like feature-deps: a fork that adopted the template BEFORE this seam existed may not have
+// the file yet, and an unconditional apply would fail the whole configuration.
+project.file("module-deps.gradle.kts").takeIf { it.exists() }?.let { apply(from = it) }

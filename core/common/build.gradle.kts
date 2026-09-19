@@ -20,25 +20,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-            // Fork addition: applying the compose-compiler plugin (below) requires the Compose
-            // Runtime on the classpath for every target it compiles, including androidMain — the
-            // multiplatform `compose.runtime` accessor (not the versionless `libs.androidx.compose.
-            // runtime` catalog alias, which relies on a BOM/transitive constraint this module has
-            // none of) resolves a real pinned version on its own, matching core/designsystem,
-            // core/firebase, core/analytics, core/store et al.
-            implementation(compose.runtime)
-            // Fork addition: StringResourceSerializer + DialogManager/DialogMessage (dialogManager/)
-            // resolve resource-id strings via org.jetbrains.compose.resources.StringResource.
-            implementation(compose.components.resources)
-            // Fork addition: DateAsStringSerializer's ImmutableListSerializer serializes
-            // ImmutableList<String> (toPersistentList()).
-            implementation(libs.kotlinx.collections.immutable)
-            // Fork addition: SavedStateHandleExtensions (getSerialized/setSerialized) needs the KMP
-            // SavedStateHandle type — same alias core/ui already uses for the same purpose.
-            implementation(libs.jb.lifecycleViewmodelSavedState)
-            // Fork addition: AppErrorMapper maps Ktor exceptions (ClientRequestException /
-            // ServerResponseException / kotlinx.io.IOException, transitively brought in by ktor-io).
-            implementation(libs.ktor.client.core)
             api(libs.kermit.logging)
             api(libs.kotlinx.datetime)
             // Re-export core-base/common (CommonModule DI, base utilities) so app-shell + feature
@@ -47,3 +28,15 @@ kotlin {
         }
     }
 }
+// ── Fork-owned dependency seam (white-label, mirrors `feature-deps.gradle.kts`) ────────────────
+// A fork adds its OWN dependencies for this module in `core/common/module-deps.gradle.kts` — never in
+// this file. That is what lets THIS build file be `owner: template` and FULL-COPY on a template
+// sync: the fork's deps live in a file the sync never touches, so a template plugin/version bump
+// can no longer drop them and no 3-way merge is needed.
+//
+// String `"commonMainImplementation"(...)` notation is used in the seam, not the type-safe
+// `libs.`/`projects.` accessors: those are NOT generated for `apply(from = ...)` script plugins.
+//
+// Guarded like feature-deps: a fork that adopted the template BEFORE this seam existed may not have
+// the file yet, and an unconditional apply would fail the whole configuration.
+project.file("module-deps.gradle.kts").takeIf { it.exists() }?.let { apply(from = it) }
