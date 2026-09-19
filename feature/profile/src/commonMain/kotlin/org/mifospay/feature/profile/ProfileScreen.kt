@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.feature.profile.generated.resources.Res
@@ -45,7 +46,6 @@ import org.mifospay.core.model.client.Client
 import org.mifospay.core.ui.utils.EventsEffect
 import org.mifospay.feature.profile.components.ProfileDetailsCard
 import org.mifospay.feature.profile.components.ProfileImage
-import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ProfileScreen(

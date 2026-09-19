@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import kpt.core.base.designsystem.theme.KptTheme
 import kpt.feature.profile.generated.resources.Res
 import kpt.feature.profile.generated.resources.feature_profile_edit_profile
 import kpt.feature.profile.generated.resources.feature_profile_email
@@ -50,7 +51,6 @@ import org.mifospay.core.designsystem.component.MifosScaffold
 import org.mifospay.core.designsystem.component.MifosTextField
 import org.mifospay.core.ui.utils.EventsEffect
 import org.mifospay.feature.profile.components.EditableProfileImage
-import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun EditProfileScreen(

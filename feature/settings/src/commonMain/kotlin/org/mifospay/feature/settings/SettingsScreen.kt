@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kpt.core.base.designsystem.theme.KptTheme
 import kpt.feature.settings.generated.resources.Res
 import kpt.feature.settings.generated.resources.feature_settings_change_language_text
 import kpt.feature.settings.generated.resources.feature_settings_change_passcode
@@ -60,7 +61,6 @@ import org.mifospay.core.designsystem.component.MifosScaffold
 import org.mifospay.core.designsystem.icon.MifosIcons
 import org.mifospay.core.ui.utils.EventsEffect
 import org.mifospay.feature.settings.language.LanguageDialog
-import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Settings screen route. Owns the passcode/biometrics integration glue:

@@ -79,6 +79,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import kpt.core.base.designsystem.theme.KptTheme
 import kpt.feature.home.generated.resources.Res
 import kpt.feature.home.generated.resources.arrow_backward
 import kpt.feature.home.generated.resources.coin_image
@@ -131,7 +132,6 @@ import org.mifospay.core.ui.MifosSmallChip
 import org.mifospay.core.ui.TransactionFilterBottomSheet
 import org.mifospay.core.ui.TransactionItem
 import org.mifospay.core.ui.utils.EventsEffect
-import template.core.base.designsystem.theme.KptTheme
 
 /*
  * Feature Enhancement

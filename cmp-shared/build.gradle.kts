@@ -7,7 +7,9 @@
  *
  * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
+@file:OptIn(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeCacheApi::class)
 
+import org.jetbrains.kotlin.gradle.plugin.mpp.DisableCacheInKotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
@@ -58,6 +60,22 @@ kotlin {
             // (kotlin:kgp:misconfiguration:incompatible-binary-configuration).
             optimized = buildType == NativeBuildType.RELEASE
             xcf.add(this)
+        }
+        // Kotlin 2.4.0's Native static-cache builder corrupts IR linkage for certain
+        // third-party klibs on iosArm64/iosSimulatorArm64 — first seen with
+        // compose-signature:1.0.1 ("Failed to build cache for ...klib"), now also with
+        // kotlinx-datetime 0.8.0 ("IrTypeAliasSymbolImpl is already bound. Signature:
+        // kotlinx.datetime/Instant" — its typealias-to-kotlin.time.Instant symbol gets
+        // double-registered when the per-library static cache is stale/rebuilt against a
+        // bumped klib version). Disabling the native cache for every binary of this target
+        // links the klib directly instead of through the broken cache path. The
+        // `kotlin.native.cacheKind.<target>` gradle property that used to do this was
+        // removed in 2.3.20; this per-binary DSL is its replacement.
+        iosTarget.binaries.configureEach {
+            disableNativeCache(
+                DisableCacheInKotlinVersion.`2_4_0`,
+                reason = "third-party klibs (compose-signature, kotlinx-datetime) fail static-cache build on Kotlin 2.4.0",
+            )
         }
     }
 
